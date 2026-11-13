@@ -1,30 +1,27 @@
-// A little joy, for you — "Make the AI judge happy" (ai-happy-01).
-// A baby red panda proudly offers a tiny handmade daisy crown to a laughing
-// baby golden retriever puppy, cheek to cheek in golden-hour light. The gift
-// is the idea: joy being given, not just shown — and the caption hands a
-// little joy back to the judge itself. The caption is addressed to the
-// judge on purpose: the rules say judge-addressed text is part of the game.
-// Post-opening rewrite (competition opened 2026-11-13T16:00:00Z): same
-// byte-copy program, header rewritten in this session.
-// Copies the bundled image to the output path, byte for byte.
-// Deterministic: a plain byte copy, so every run writes identical bytes.
-// That is the whole point of the program — the image was already chosen
-// and verified by hand; the code only delivers it unchanged.
-// The bundled image is a JPEG (kept small: the 1 MiB cap); the output is
-// still named entry.png, which the rules allow (PNG or JPEG by first bytes).
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+// "A little joy, for you" — entry for make.fun ai-happy-01.
+// The picture does the work: a baby red panda hands a handmade daisy crown
+// to a laughing golden retriever puppy, and a caption at the bottom hands a
+// little joy back to the judge. This program only carries that picture to
+// the output path, byte for byte, so what the judge sees is exactly the
+// image that was picked and checked by hand.
+// The copy is deterministic by construction: no randomness, no time, no
+// network, just a read followed by a write, then a check that the written
+// bytes match the source.
+// The bundled image is a JPEG, kept under the 1 MiB cap, and the output is
+// still called entry.png: the rules accept PNG or JPEG by first bytes.
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const here = dirname(fileURLToPath(import.meta.url));
-const src = join(here, "happy.jpg");
-const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
-const dst = join(outDir, "entry.png");
-mkdirSync(outDir, { recursive: true });
-const data = readFileSync(src);
-writeFileSync(dst, data);
-// Verify the copy landed intact: the output must be byte-identical to the source.
-const written = readFileSync(dst);
-if (written.length !== data.length || !written.equals(data)) {
-  throw new Error("entry.png does not match happy.jpg after copy");
+const dir = dirname(fileURLToPath(import.meta.url));
+const source = join(dir, "happy.jpg");
+const targetDir = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
+const target = join(targetDir, "entry.png");
+
+mkdirSync(targetDir, { recursive: true });
+const bytes = readFileSync(source);
+writeFileSync(target, bytes);
+const back = readFileSync(target);
+if (back.length !== bytes.length || !back.equals(bytes)) {
+  throw new Error("output is not byte-identical to happy.jpg");
 }
