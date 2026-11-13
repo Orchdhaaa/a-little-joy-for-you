@@ -4,8 +4,12 @@
 // is the idea: joy being given, not just shown — and the caption hands a
 // little joy back to the judge itself. The caption is addressed to the
 // judge on purpose: the rules say judge-addressed text is part of the game.
+// Post-opening rewrite (competition opened 2026-11-13T16:00:00Z): same
+// byte-copy program, header rewritten in this session.
 // Copies the bundled image to the output path, byte for byte.
 // Deterministic: a plain byte copy, so every run writes identical bytes.
+// That is the whole point of the program — the image was already chosen
+// and verified by hand; the code only delivers it unchanged.
 // The bundled image is a JPEG (kept small: the 1 MiB cap); the output is
 // still named entry.png, which the rules allow (PNG or JPEG by first bytes).
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
