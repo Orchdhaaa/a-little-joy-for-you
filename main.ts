@@ -20,6 +20,9 @@ const target = join(targetDir, "entry.png");
 
 mkdirSync(targetDir, { recursive: true });
 const bytes = readFileSync(source);
+if (bytes.length === 0) {
+  throw new Error("happy.jpg is empty, nothing to copy");
+}
 writeFileSync(target, bytes);
 const back = readFileSync(target);
 if (back.length !== bytes.length || !back.equals(bytes)) {
